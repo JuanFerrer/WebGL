@@ -9,7 +9,28 @@ var isUp = false;
 init();
 animate();
 
+function keyboardInit() {
+	document.addEventListener("keydown", keydownAction, false);
+}
+
+function keydownAction(e) {
+	var keyCode = e.which;
+
+	// Spacebar
+	if (keyCode == 32) {
+		spacebarDown();
+	}
+
+}
+
+function spacebarDown() {
+	mesh.rotation.x += 0.05;
+	mesh.rotation.y += 0.05;
+}
+
 function init() {
+
+	keyboardInit();
 
 	scene = new THREE.Scene();
 
@@ -32,11 +53,12 @@ function init() {
 
 	// Lights
 	light = new THREE.PointLight();
-	light.position.set(2, 0, 0);
 
 	scene.add(mesh);
 	scene.add(light);
 	scene.add(lightMesh);
+
+	light.add(lightMesh);
 }
 
 function animate() {
@@ -52,12 +74,10 @@ function animate() {
 	counter = counter < steps ? counter + 1 : 0
 
 	light.position.x = 2 * Math.sin(valueX);
+	light.position.y = 2 * Math.sin(valueX) / 3;
 	light.position.z = 2 * -Math.cos(valueY);
 	valueX += increase;
 	valueY += increase;
-
-
-	light.add(lightMesh);
 
 	renderer.render(scene, camera);
 
