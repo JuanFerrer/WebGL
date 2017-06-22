@@ -1,6 +1,8 @@
 var scene, camera, renderer;
-var geometry, material, mesh;
-var light, lightModel, lightMaterial, lightMesh;
+var cubeG, cubeM, cube;
+var light, lightG, lightM, lightMesh, lightColor;
+var light2, lightM2, lightMesh2, lightColor2;
+var light3, lightM3, lightMesh3, lightColor3;
 var valueX, valueY, counter;
 
 var isRight = false;
@@ -9,24 +11,7 @@ var isUp = false;
 init();
 animate();
 
-function keyboardInit() {
-	document.addEventListener("keydown", keydownAction, false);
-}
 
-function keydownAction(e) {
-	var keyCode = e.which;
-
-	// Spacebar
-	if (keyCode == 32) {
-		spacebarDown();
-	}
-
-}
-
-function spacebarDown() {
-	mesh.rotation.x += 0.05;
-	mesh.rotation.y += 0.05;
-}
 
 function init() {
 
@@ -35,16 +20,25 @@ function init() {
 	scene = new THREE.Scene();
 
 	camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 100);
-	camera.position.z = 8;
+	camera.position.z = 10;
 
 	// Models
-	geometry = new THREE.IcosahedronGeometry(1);
-	material = new THREE.MeshLambertMaterial({ color: 0xF44336 });
-	mesh = new THREE.Mesh(geometry, material);
+	cubeG = new THREE.IcosahedronGeometry(1);
+	cubeM = new THREE.MeshLambertMaterial({ color: 0xF44336 });
+	cube = new THREE.Mesh(cubeG, cubeM);
 
-	lightModel = new THREE.SphereGeometry(0.3, 100, 100);
-	lightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-	lightMesh = new THREE.Mesh(lightModel, lightMaterial);
+	lightG = new THREE.SphereGeometry(0.3, 100, 100);
+	lightColor = 0x3F51B5;
+	lightM = new THREE.MeshBasicMaterial({ color: lightColor });
+	lightMesh = new THREE.Mesh(lightG, lightM);
+
+	lightColor2 = 0xFFFFFF
+	lightM2 = new THREE.MeshBasicMaterial({ color: lightColor2 });
+	lightMesh2 = new THREE.Mesh(lightG, lightM2);
+
+	lightColor3 = 0x4CAF50;
+	lightM3 = new THREE.MeshBasicMaterial({ color: lightColor3 });
+	lightMesh3 = new THREE.Mesh(lightG, lightM3);
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
@@ -52,13 +46,19 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 
 	// Lights
-	light = new THREE.PointLight();
-
-	scene.add(mesh);
-	scene.add(light);
-	scene.add(lightMesh);
+	light = new THREE.PointLight(lightColor);
+	light2 = new THREE.PointLight();
+	light3 = new THREE.PointLight(lightColor3);
 
 	light.add(lightMesh);
+	light2.add(lightMesh2);
+	light3.add(lightMesh3);
+
+	scene.add(cube);
+	scene.add(light);
+	scene.add(light2);
+	scene.add(light3)
+
 }
 
 function animate() {
@@ -76,6 +76,15 @@ function animate() {
 	light.position.x = 2 * Math.sin(valueX);
 	light.position.y = 2 * Math.sin(valueX) / 3;
 	light.position.z = 2 * -Math.cos(valueY);
+
+	light2.position.x = 3.2 * Math.cos(valueX);
+	light2.position.y = 2 * Math.sin(valueX);
+	light2.position.z = 3.2 * Math.sin(valueY);
+
+	light3.position.x = 5 * -Math.cos(valueX);
+	light3.position.y = 2 * -Math.cos(valueX);
+	light3.position.z = 2 * Math.sin(valueY);
+
 	valueX += increase;
 	valueY += increase;
 
