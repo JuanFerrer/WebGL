@@ -5,91 +5,151 @@ var modelRotSpeed = 0.05;
 var camMoveSpeed = 0.1;
 var camRotSpeed = 0.01;
 
+var keyState = {};
+
+/**
+ * Initialise keyboard to keep track what keys have
+ * are pressed
+ */
 function keyboardInit() {
-	document.addEventListener("keydown", keydownAction, false);
+	// https://stackoverflow.com/a/12273538/7179042
+	// Keep track of what keys are down and update in loop
+	window.addEventListener('keydown', function (e) {
+		keyState[e.keyCode || e.which] = true;
+	}, true);
+	window.addEventListener('keyup', function (e) {
+		keyState[e.keyCode || e.which] = false;
+	}, true);
 }
 
-function keydownAction(e) {
-	var keyCode = e.which;
-
+/**
+ * Check what keys have been pressed since last
+ * frame and react accordingly
+ */
+function resolveInput() {
 	// Spacebar
-	if (keyCode == 32) {
-		spacebarDown();
+	if (keyState[32]) {
+		rotateCube();
 	}
 
 	// Left
-	if (keyCode == 37) {
+	if (keyState[37]) {
 		move("left");
 	}
 	// Right
-	if (keyCode == 39) {
+	if (keyState[39]) {
 		move("right");
 	}
 	// Up
-	if (keyCode == 38) {
+	if (keyState[38]) {
 		move("front");
 	}
 	// Down
-	if (keyCode == 40) {
+	if (keyState[40]) {
 		move("back");
 	}
 
 	// A
-	if (keyCode == 65) {
+	if (keyState[65]) {
 		rotate("left");
 	}
 	// D
-	if (keyCode == 68) {
+	if (keyState[68]) {
 		rotate("right");
 	}
 	// W
-	if (keyCode == 87) {
+	if (keyState[87]) {
 		rotate("up");
 	}
 	// S
-	if (keyCode == 83) {
+	if (keyState[83]) {
 		rotate("down");
+	}
+
+	// 0
+	if (keyState[96]) {
+		changeColor(cubeColor);
+	}
+
+	// 1
+	if (keyState[97]) {
+		changeColor(lightColor);
+	}
+
+	// 2
+	if (keyState[98]) {
+		changeColor(lightColor2);
+	}
+
+		// 1
+	if (keyState[99]) {
+		changeColor(lightColor3);
 	}
 
 }
 
-function spacebarDown() {
+/**
+ * Change the color of the cube
+ * @param {number} color - Hex literal
+ */
+function changeColor(color){
+	cube.material.color.setHex(color);
+}
+
+/**
+ * 
+ */
+function rotateCube() {
 	cube.rotation.x += modelRotSpeed;
 	cube.rotation.y += modelRotSpeed;
 }
 
-// LOCAL!!
+/**
+ * Move camera locally. TODO: global
+ * @param {string} dir - Direction of movement
+ */
 function move(dir) {
 	switch (dir) {
 		case "left":
-			camera.position.x -= camMoveSpeed
+			//camera.position.x -= camMoveSpeed
+			camera.translateX(-camMoveSpeed);
 			break;
 		case "right":
-			camera.position.x += camMoveSpeed
+			// camera.position.x += camMoveSpeed
+			camera.translateX(camMoveSpeed);
 			break;
 		case "front":
-			camera.position.z -= camMoveSpeed
+			// camera.position.z -= camMoveSpeed
+			camera.translateZ(-camMoveSpeed);
 			break;
 		case "back":
-			camera.position.z += camMoveSpeed
+			// camera.position.z += camMoveSpeed
+			camera.translateZ(camMoveSpeed);
 			break;
 	}
 }
 
-// LOCAL!!
+/**
+ * Rotate camera locally. TODO: global
+ * @param {string} dir - Direction of rotation
+ */
 function rotate(dir) {
 	switch (dir) {
 		case "left":
-			camera.rotation.y += camRotSpeed
+			// camera.rotation.y += camRotSpeed;
+			camera.rotateY(camRotSpeed);
 			break;
 		case "right":
-			camera.rotation.y -= camRotSpeed
+			// camera.rotation.y -= camRotSpeed;
+			camera.rotateY(-camRotSpeed);
 			break;
 		case "up":
-			camera.rotation.x += camRotSpeed
+			// camera.rotation.x += camRotSpeed;
+			camera.rotateX(camRotSpeed);
 			break;
 		case "down":
-			camera.rotation.x -= camRotSpeed
+			// camera.rotation.x -= camRotSpeed;
+			camera.rotateX(-camRotSpeed);
 			break;
 	}
 }

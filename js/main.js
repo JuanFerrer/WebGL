@@ -1,5 +1,6 @@
 var scene, camera, renderer;
-var cubeG, cubeM, cube;
+var cubeG, cubeM, cube, cubeColor;
+var planeG, planeM, plane, planeColor;
 var light, lightG, lightM, lightMesh, lightColor;
 var light2, lightM2, lightMesh2, lightColor2;
 var light3, lightM3, lightMesh3, lightColor3;
@@ -12,7 +13,9 @@ init();
 animate();
 
 
-
+/**
+ * Initialise scene
+ */
 function init() {
 
 	keyboardInit();
@@ -23,47 +26,72 @@ function init() {
 	camera.position.z = 10;
 
 	// Models
+	cubeColor = 0xF44336;
 	cubeG = new THREE.IcosahedronGeometry(1);
-	cubeM = new THREE.MeshLambertMaterial({ color: 0xF44336 });
+	cubeM = new THREE.MeshPhongMaterial({ color: cubeColor });
 	cube = new THREE.Mesh(cubeG, cubeM);
+	cube.castShadow = true;
+	cube.receiveShadow = false;
+	scene.add(cube);
 
-	lightG = new THREE.SphereGeometry(0.3, 100, 100);
+	planeColor = 0xFFFFFF;
+	planeG = new THREE.PlaneGeometry(100, 100, 20, 20);
+	planeM = new THREE.MeshPhongMaterial({ color: planeColor });
+	plane = new THREE.Mesh(planeG, planeM);
+	plane.castShadow = false;
+	plane.receiveShadow = true;
+	scene.add(plane);
+
+	// Lights
 	lightColor = 0x3F51B5;
-	lightM = new THREE.MeshBasicMaterial({ color: lightColor });
-	lightMesh = new THREE.Mesh(lightG, lightM);
+	light = new THREE.PointLight(lightColor);
+	light.castShadow = true;
 
 	lightColor2 = 0xFFFFFF
-	lightM2 = new THREE.MeshBasicMaterial({ color: lightColor2 });
-	lightMesh2 = new THREE.Mesh(lightG, lightM2);
+	light2 = new THREE.PointLight();
+	light2.castShadow = true;
 
 	lightColor3 = 0x4CAF50;
+	light3 = new THREE.PointLight(lightColor3);
+	light3.castShadow = true;
+
+	// Light models
+	lightG = new THREE.SphereGeometry(0.3, 100, 100);
+	lightM = new THREE.MeshBasicMaterial({ color: lightColor });
+	lightMesh = new THREE.Mesh(lightG, lightM);
+	light.add(lightMesh);
+
+	lightM2 = new THREE.MeshBasicMaterial({ color: lightColor2 });
+	lightMesh2 = new THREE.Mesh(lightG, lightM2);
+	light2.add(lightMesh2);
+
 	lightM3 = new THREE.MeshBasicMaterial({ color: lightColor3 });
 	lightMesh3 = new THREE.Mesh(lightG, lightM3);
+	light3.add(lightMesh3);
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.setClearColor(0x212121, 1);
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.PCFShadowMap;
 	document.body.appendChild(renderer.domElement);
 
-	// Lights
-	light = new THREE.PointLight(lightColor);
-	light2 = new THREE.PointLight();
-	light3 = new THREE.PointLight(lightColor3);
-
-	light.add(lightMesh);
-	light2.add(lightMesh2);
-	light3.add(lightMesh3);
-
-	scene.add(cube);
 	scene.add(light);
 	scene.add(light2);
-	scene.add(light3)
+	scene.add(light3);
 
+	plane.rotateX(Math.degToRad(-90));
+	plane.translateZ(-3);
 }
 
+/**
+ * Animate scene
+ */
 function animate() {
 
 	requestAnimationFrame(animate);
+
+	resolveInput();
 
 	if (valueX == null) valueX = 0;
 	if (valueY == null) valueY = 0;
