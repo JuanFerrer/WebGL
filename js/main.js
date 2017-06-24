@@ -93,28 +93,32 @@ function animate() {
 
 	resolveInput();
 
-	if (valueX == null) valueX = 0;
-	if (valueY == null) valueY = 0;
-	if (counter == null) counter = 0;
+	if (!isPaused) {
 
-	var steps = 200;
-	var increase = Math.PI * 2 / steps;
-	counter = counter < steps ? counter + 1 : 0
+		if (valueX == null) valueX = 0;
+		if (valueY == null) valueY = 0;
+		if (counter == null) counter = 0;
 
-	light.position.x = 2 * Math.sin(valueX);
-	light.position.y = 2 * Math.sin(valueX) / 3;
-	light.position.z = 2 * -Math.cos(valueY);
+		var steps = 200;
+		var increase = Math.PI * 2 / steps;
+		counter = counter < steps ? counter + 1 : 0
 
-	light2.position.x = 3.2 * Math.cos(valueX);
-	light2.position.y = 2 * Math.sin(valueX);
-	light2.position.z = 3.2 * Math.sin(valueY);
+		light.position.x = 2 * Math.sin(valueX);
+		light.position.y = 2 * Math.sin(valueX) / 3;
+		light.position.z = 2 * -Math.cos(valueY);
 
-	light3.position.x = 5 * -Math.cos(valueX);
-	light3.position.y = 2 * -Math.cos(valueX);
-	light3.position.z = 2 * Math.sin(valueY);
+		light2.position.x = 3.2 * Math.cos(valueX);
+		light2.position.y = 2 * Math.sin(valueX);
+		light2.position.z = 3.2 * Math.sin(valueY);
 
-	valueX += increase;
-	valueY += increase;
+		light3.position.x = 5 * -Math.cos(valueX);
+		light3.position.y = 2 * -Math.cos(valueX);
+		light3.position.z = 2 * Math.sin(valueY);
+
+		valueX += increase;
+		valueY += increase;
+		isPaused = false;
+	}
 
 	renderer.render(scene, camera);
 

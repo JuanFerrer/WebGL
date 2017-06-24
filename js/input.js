@@ -7,6 +7,9 @@ var camRotSpeed = 0.01;
 
 var keyState = {};
 
+var isPaused = false;
+var canChangePause = true;
+
 /**
  * Initialise keyboard to keep track what keys have
  * are pressed
@@ -27,72 +30,89 @@ function keyboardInit() {
  * frame and react accordingly
  */
 function resolveInput() {
-	// Spacebar
-	if (keyState[32]) {
-		rotateCube();
-	}
+	if (!isPaused) {
+		// Spacebar
+		if (keyState[32]) {
+			rotateCube();
+		}
 
-	// Left
-	if (keyState[37]) {
-		move("left");
-	}
-	// Right
-	if (keyState[39]) {
-		move("right");
-	}
-	// Up
-	if (keyState[38]) {
-		move("front");
-	}
-	// Down
-	if (keyState[40]) {
-		move("back");
-	}
+		// Left
+		if (keyState[37]) {
+			move("left");
+		}
+		// Right
+		if (keyState[39]) {
+			move("right");
+		}
+		// Up
+		if (keyState[38]) {
+			move("front");
+		}
+		// Down
+		if (keyState[40]) {
+			move("back");
+		}
 
-	// A
-	if (keyState[65]) {
-		rotate("left");
-	}
-	// D
-	if (keyState[68]) {
-		rotate("right");
-	}
-	// W
-	if (keyState[87]) {
-		rotate("up");
-	}
-	// S
-	if (keyState[83]) {
-		rotate("down");
-	}
+		// A
+		if (keyState[65]) {
+			rotate("left");
+		}
+		// D
+		if (keyState[68]) {
+			rotate("right");
+		}
+		// W
+		if (keyState[87]) {
+			rotate("up");
+		}
+		// S
+		if (keyState[83]) {
+			rotate("down");
+		}
 
-	// 0
-	if (keyState[96]) {
-		changeColor(cubeColor);
-	}
-
-	// 1
-	if (keyState[97]) {
-		changeColor(lightColor);
-	}
-
-	// 2
-	if (keyState[98]) {
-		changeColor(lightColor2);
-	}
+		// 0
+		if (keyState[96]) {
+			changeColor(cubeColor);
+		}
 
 		// 1
-	if (keyState[99]) {
-		changeColor(lightColor3);
+		if (keyState[97]) {
+			changeColor(lightColor);
+		}
+
+		// 2
+		if (keyState[98]) {
+			changeColor(lightColor2);
+		}
+
+		// 3
+		if (keyState[99]) {
+			changeColor(lightColor3);
+		}
 	}
 
+	// P
+	if (keyState[80]) {
+		if (isPaused && canChangePause) {
+			isPaused = false;
+			canChangePause = false;
+		}
+		else if (!isPaused && canChangePause) {
+			isPaused = true;
+			canChangePause = false;
+		}
+	}
+
+	if (!keyState[80]) {
+		canChangePause = true;
+	}
 }
 
 /**
  * Change the color of the cube
  * @param {number} color - Hex literal
  */
-function changeColor(color){
+function changeColor(color) {
 	cube.material.color.setHex(color);
 }
 
